@@ -8,6 +8,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 public class Helpers {
@@ -25,11 +29,11 @@ public class Helpers {
     public JSONArray getDataFromAPI(String URL, Integer numPages)
             throws IOException, InterruptedException {
         JSONArray results = new JSONArray();
-        RequestMaker requestMaker = new RequestMaker(URL, numPages);
+
         // call into the API once for each page requested
         for(int i = 0; i < numPages; i++) {
             // makeRequest returns a string representation of a JSONArray
-            JSONArray returnData = new JSONArray(requestMaker.makeRequest(URL, i));
+            JSONArray returnData = new JSONArray(makeRequest(URL, i));
 
             // iterate over the JSONArray and iterate over the JSONObjects and add to results
             // just appending the JSONArray means I end up with an array of JSONArrays
@@ -40,6 +44,17 @@ public class Helpers {
         }
         return results;
     }
+
+    private String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(URL + pageNum))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+
 
     public void run() {
 
