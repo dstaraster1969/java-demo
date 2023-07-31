@@ -1,4 +1,9 @@
-import helpers.YAMLReader;
+import helpers.Helpers;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,9 +15,11 @@ public class Main {
         Integer numPages = Integer.parseInt(args[0]);
         String filters = args[1];
 
-        YAMLReader yamlReader = new YAMLReader();
+        Helpers helpers = new Helpers();
         try {
-            System.out.println(yamlReader.getURL());
+            String URL = helpers.getURL();
+            JSONArray results = helpers.getDataFromAPI(URL, numPages);
+            System.out.println(results.toString(4));
         } catch(Exception e) {
             System.exit(1);
         }
