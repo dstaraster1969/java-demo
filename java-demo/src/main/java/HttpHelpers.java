@@ -1,7 +1,4 @@
-package helpers;
-
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -14,14 +11,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
-public class Helpers {
+public class HttpHelpers {
     public String getURL() throws Exception  {
         Yaml yaml = new Yaml();
         String s = File.separator;
-        String configFilePath = "." + s + "src" + s + "main" + s + "java" + s + "helpers" + s + "config.yml";
+        String configFilePath = "." + s + "src" + s + "main" + s + "java" + s + "resources" + s + "config.yml";
         InputStream inputStream = new FileInputStream(new File(configFilePath));
         Map<String, String> map = yaml.load(inputStream);
-        System.out.println(map);
 
         return map.get("URL");
     }
@@ -32,11 +28,17 @@ public class Helpers {
 
         // call into the API once for each page requested
         for(int i = 0; i < numPages; i++) {
-            // makeRequest returns a string representation of a JSONArray
-            JSONArray returnData = new JSONArray(makeRequest(URL, i));
+            // makeRequest returns a string representation of a JSONArray;
+            // Run calls to makeRequest() concurrently
+            RequestRunnable requestRunnable = new RequestRunnable(URL, numPages);
+            Thread thread = new Thread(requestRunnable);
+            thread.start();
+            thread.join();
+            JSONArray returnData = new JSONArray(requestRunnable.getResponse());
+//            JSONArray returnData = new JSONArray(makeRequest(URL, i));
 
             // iterate over the JSONArray and iterate over the JSONObjects and add to results
-            // just appending the JSONArray means I end up with an array of JSONArrays
+            // just appending the JSONArray means ends up with an array of JSONArrays
             // we want an array made up of JSONObjects
             for(int j = 0; j < returnData.length(); j++) {
                 results.put(returnData.getJSONObject(j));
@@ -45,7 +47,7 @@ public class Helpers {
         return results;
     }
 
-    private String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
+    protected String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(URL + pageNum))
@@ -53,10 +55,5 @@ public class Helpers {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
-    }
-
-
-    public void run() {
-
     }
 }
