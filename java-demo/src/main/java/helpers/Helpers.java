@@ -54,9 +54,4 @@ public class Helpers {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
-
-
-    public void run() {
-
-    }
 }
