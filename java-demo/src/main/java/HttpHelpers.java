@@ -30,12 +30,11 @@ public class HttpHelpers {
         for(int i = 0; i < numPages; i++) {
             // makeRequest returns a string representation of a JSONArray;
             // Run calls to makeRequest() concurrently
-            RequestRunnable requestRunnable = new RequestRunnable(URL, numPages);
-            Thread thread = new Thread(requestRunnable);
+//            RequestRunnable requestRunnable = new RequestRunnable(URL, numPages);
+            RequestThread thread = new RequestThread(URL, numPages);
             thread.start();
             thread.join();
-            JSONArray returnData = new JSONArray(requestRunnable.getResponse());
-//            JSONArray returnData = new JSONArray(makeRequest(URL, i));
+            JSONArray returnData = new JSONArray(thread.getResponse());
 
             // iterate over the JSONArray and iterate over the JSONObjects and add to results
             // just appending the JSONArray means ends up with an array of JSONArrays

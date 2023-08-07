@@ -1,17 +1,16 @@
-import java.io.IOException;
-
-public class RequestRunnable implements Runnable{
+public class RequestThread extends Thread {
     private final String url;
     private final Integer pageNum;
     private String response;
 
-    public RequestRunnable(String url, Integer pageNum) {
+    public RequestThread(String url, Integer pageNum) {
         this.url = url;
         this.pageNum = pageNum;
     }
 
     @Override
     public void run() {
+        System.out.println("In thread.run() " + this.getName() + "\n");
         try {
             response = new HttpHelpers().makeRequest(url, pageNum);
         } catch (Exception e) {
@@ -20,6 +19,7 @@ public class RequestRunnable implements Runnable{
     }
 
     public String getResponse() {
+        System.out.println("In getResponse() " + this.getName() + "\n");
         return response;
     }
 }
