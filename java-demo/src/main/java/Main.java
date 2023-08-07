@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         // Parse command line args
         if(args.length != 2) {
             System.out.println("java main.java numPages, filters (a JSON object)");
@@ -19,10 +20,11 @@ public class Main {
         try {
             String URL = helpers.getURL();
             JSONArray results = helpers.getDataFromAPI(URL, numPages);
-            System.out.println(results.toString(4));
+//            System.out.println(results.toString(4));
         } catch(Exception e) {
             System.exit(1);
         }
-
+        long end = System.currentTimeMillis();
+        System.out.println("Elapsed time " + (end - start));
     }
 }
