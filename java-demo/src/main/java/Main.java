@@ -15,7 +15,7 @@ public class Main {
         try {
             String URL = requestHelpers.getURL();
             JSONArray results = requestHelpers.getDataFromAPI(URL, numPages);
-//            System.out.println(results.toString(4));
+            System.out.println(results.toString(4));
         } catch(Exception e) {
             System.out.println(e.getMessage());
             System.exit(1);

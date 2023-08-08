@@ -1,4 +1,5 @@
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -30,31 +31,20 @@ public class RequestHelpers {
             throws IOException, InterruptedException, ExecutionException {
         JSONArray results = new JSONArray();
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<String> callable = new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                // makeRequest returns a string representation of a JSONArray
-                return makeRequest(URL, numPages);
-            }
-        };
 
         List<Future<String>> futures = new ArrayList<>();
         // call into the API once for each page requested
         for(int i = 0; i < numPages; i++) {
-            System.out.println("Making request for page " + i + "\n");
             // for each of numPages, kick off getting data
+            Callable<String> callable = new MyCallable(URL, i);
             futures.add(executorService.submit(callable));
-//            retVals.add(new JSONArray(future.get()));
-//            // iterate over the JSONArray and iterate over the JSONObjects and add to results
-//            // just appending the JSONArray means I end up with an array of JSONArrays
-//            // we want an array made up of JSONObjects
-//            for(int j = 0; j < returnData.length(); j++) {
-//                results.put(returnData.getJSONObject(j));
             }
         // process the results
         for (Future<String> future : futures) {
-            System.out.println("Getting results\n");
-            JSONArray jsonArray = new JSONArray(future.get());
+//            JSONArray jsonArray = new JSONArray(future.get());
+                JSONArray jsonArray = new JSONArray(future.get());
+            String name = jsonArray.getJSONObject(0).getString("name");
+            System.out.println("show name " + name);
             for (int j = 0; j < jsonArray.length(); j++) {
                 results.put(jsonArray.getJSONObject(j));
             }
@@ -63,7 +53,8 @@ public class RequestHelpers {
         return results;
     }
 
-    private String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
+    protected static String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
+        System.out.println("Request for page " + pageNum);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(URL + pageNum))
