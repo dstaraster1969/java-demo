@@ -1,5 +1,9 @@
 import org.json.JSONArray;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+
 public class Main {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
@@ -15,7 +19,10 @@ public class Main {
         try {
             String URL = requestHelpers.getURL();
             JSONArray results = requestHelpers.getDataFromAPI(URL, numPages);
-            System.out.println(results.toString(4));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("." + File.separator + "results.json"));
+            writer.write(results.toString(4));
+            writer.close();
+
         } catch(Exception e) {
             System.out.println(e.getMessage());
             System.exit(1);
