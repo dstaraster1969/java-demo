@@ -11,10 +11,12 @@ import java.util.Objects;
 
 public class Filter {
     protected JSONArray filterAll(JSONArray unfiltered, String filters) throws JsonProcessingException {
-        JSONArray array = new JSONArray(filters);
-        JSONArray results = applyFilter(unfiltered, array.getJSONObject(0));
-        //    JSONArray filtered = applyFilter(unfiltered, filters[0]
-        return null;
+        JSONArray filter_array = new JSONArray(filters);
+        JSONArray results = applyFilter(unfiltered, filter_array.getJSONObject(0));
+        for(Object f : filter_array) {
+            results = applyFilter(results, (JSONObject) f);
+        }
+        return results;
     }
 
     private JSONArray applyFilter(JSONArray objs, JSONObject filter) throws JsonProcessingException {
@@ -29,20 +31,18 @@ public class Filter {
     }
 
     private Boolean checkForMatch(JSONObject show, JSONObject filter) throws JsonProcessingException {
-        if(Objects.equals(filter, new JSONObject(""))) {
+        if(Objects.equals(filter, new JSONObject("{}"))) {
             return true;
         }
-        HashMap<String, Object> hashMap = new ObjectMapper().readValue(show.toString(), HashMap.class);
-        String firstKey = (String) hashMap.keySet().toArray()[0];
-        Object firstKeyValue = hashMap.get(firstKey);
-        if (firstKeyValue == null) {
-            if (show.get(firstKey).equals(filter.get(firstKey))) {
-                return true;
-            } else {
-                return false;
-            }
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, Object> show_map = mapper.readValue(show.toString(), HashMap.class);
+        HashMap<String, Object> filter_map = mapper.readValue(filter.toString(), HashMap.class);
+        String key = (String) filter_map.keySet().toArray()[0];
+//        Object firstKeyValue = hashMap.get(firstKey);
+        if (show_map.get(key).getClass() == String.class) {
+            return show.get(key).equals(filter.get(key));
         } else {
-            return checkForMatch((JSONObject) show.get(firstKey), (JSONObject) filter.get(firstKey));
+            return checkForMatch((JSONObject) show.get(key), (JSONObject) filter.get(key));
         }
     }
 }

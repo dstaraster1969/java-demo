@@ -22,7 +22,7 @@ public class Main {
 //            JSONArray filtered_results =
             JSONArray filtered_results = new Filter().filterAll(results, filters);
             BufferedWriter writer = new BufferedWriter(new FileWriter("." + File.separator + "results.json"));
-            writer.write(results.toString(4));
+            writer.write(filtered_results.toString(4));
             writer.close();
 
         } catch(Exception e) {
