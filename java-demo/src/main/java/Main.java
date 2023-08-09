@@ -19,6 +19,8 @@ public class Main {
         try {
             String URL = requestHelpers.getURL();
             JSONArray results = requestHelpers.getDataFromAPI(URL, numPages);
+//            JSONArray filtered_results =
+            JSONArray filtered_results = new Filter().filterAll(results, filters);
             BufferedWriter writer = new BufferedWriter(new FileWriter("." + File.separator + "results.json"));
             writer.write(results.toString(4));
             writer.close();
