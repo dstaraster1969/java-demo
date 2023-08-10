@@ -40,7 +40,7 @@ public class Filter {
         String key = (String) filter_map.keySet().toArray()[0];
         if(show_map.get(key) == null) {
             return false;
-        } else if(show_map.get(key).getClass() == String.class) {
+        } else if(show_map.get(key).getClass() != JSONObject.class) {
             return show.get(key).equals(filter.get(key));
         } else {
             return checkForMatch((JSONObject) show.get(key), (JSONObject) filter.get(key));
