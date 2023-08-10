@@ -4,10 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.security.KeyException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Filter {
     protected JSONArray filterAll(JSONArray unfiltered, String filters) throws JsonProcessingException {
@@ -40,7 +37,7 @@ public class Filter {
         String key = (String) filter_map.keySet().toArray()[0];
         if(show_map.get(key) == null) {
             return false;
-        } else if(show_map.get(key).getClass() != JSONObject.class) {
+        } else if(show_map.get(key).getClass() != LinkedHashMap.class) {
             return show.get(key).equals(filter.get(key));
         } else {
             return checkForMatch((JSONObject) show.get(key), (JSONObject) filter.get(key));
