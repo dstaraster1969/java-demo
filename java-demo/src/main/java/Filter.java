@@ -38,8 +38,9 @@ public class Filter {
         HashMap<String, Object> show_map = mapper.readValue(show.toString(), HashMap.class);
         HashMap<String, Object> filter_map = mapper.readValue(filter.toString(), HashMap.class);
         String key = (String) filter_map.keySet().toArray()[0];
-//        Object firstKeyValue = hashMap.get(firstKey);
-        if (show_map.get(key).getClass() == String.class) {
+        if(show_map.get(key) == null) {
+            return false;
+        } else if(show_map.get(key).getClass() == String.class) {
             return show.get(key).equals(filter.get(key));
         } else {
             return checkForMatch((JSONObject) show.get(key), (JSONObject) filter.get(key));
