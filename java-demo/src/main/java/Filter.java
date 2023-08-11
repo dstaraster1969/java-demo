@@ -10,6 +10,7 @@ public class Filter {
     protected JSONArray filterAll(JSONArray unfiltered, String filters) throws JsonProcessingException {
         JSONArray filter_array = new JSONArray(filters);
         JSONArray results = applyFilter(unfiltered, filter_array.getJSONObject(0));
+        filter_array.remove(0);
         for(Object f : filter_array) {
             results = applyFilter(results, (JSONObject) f);
         }

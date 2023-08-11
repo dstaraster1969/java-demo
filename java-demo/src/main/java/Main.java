@@ -9,7 +9,7 @@ public class Main {
         long start = System.currentTimeMillis();
         // Parse command line args
         if(args.length != 2) {
-            System.out.println("java main.java numPages, filters (a JSON object)");
+            System.out.println("\nTo run: java main.java numPages, filters (a JSON object)");
             System.exit(1);
         }
         Integer numPages = Integer.parseInt(args[0]);
