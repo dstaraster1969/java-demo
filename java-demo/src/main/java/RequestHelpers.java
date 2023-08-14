@@ -22,7 +22,6 @@ public class RequestHelpers {
         String configFilePath = "." + s + "src" + s + "main" + s + "java" + s + "helpers" + s + "config.yml";
         InputStream inputStream = new FileInputStream(new File(configFilePath));
         Map<String, String> map = yaml.load(inputStream);
-        System.out.println(map);
 
         return map.get("URL");
     }
@@ -44,7 +43,6 @@ public class RequestHelpers {
 //            JSONArray jsonArray = new JSONArray(future.get());
                 JSONArray jsonArray = new JSONArray(future.get());
             String name = jsonArray.getJSONObject(0).getString("name");
-            System.out.println("show name " + name);
             for (int j = 0; j < jsonArray.length(); j++) {
                 results.put(jsonArray.getJSONObject(j));
             }
@@ -54,7 +52,6 @@ public class RequestHelpers {
     }
 
     protected static String makeRequest(String URL, Integer pageNum) throws IOException, InterruptedException {
-        System.out.println("Request for page " + pageNum);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(URL + pageNum))
