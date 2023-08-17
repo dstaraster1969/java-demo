@@ -26,6 +26,9 @@ public class RequestHelpers {
         return map.get("URL");
     }
 
+    // Gets the specified number of pages from the URL in the config file
+    // Each API request is sent on its own thread because network calls are
+    // expensive and will take different amounts of time to come back
     public JSONArray getDataFromAPI(String URL, Integer numPages)
             throws IOException, InterruptedException, ExecutionException {
         JSONArray results = new JSONArray();

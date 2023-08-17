@@ -1,5 +1,6 @@
 import java.util.concurrent.Callable;
 
+// MyCallable was implemented to allow for multithreading
 public class MyCallable implements Callable {
     String url;
     Integer pageNum;

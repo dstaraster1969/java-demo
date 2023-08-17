@@ -17,7 +17,7 @@ public class Filter {
         return results;
     }
 
-    // applyFilter() takes the full array of lists and a single filter
+    // applyFilter() applies a single filter to all shows
     private JSONArray applyFilter(JSONArray objs, JSONObject filter) throws JsonProcessingException {
         JSONArray results = new JSONArray();
         // checks each json represented object against the filter
@@ -44,12 +44,17 @@ public class Filter {
         HashMap<String, Object> filter_map = mapper.readValue(filter.toString(), HashMap.class);
         String key = (String) filter_map.keySet().toArray()[0];
 
-        // If it gets to a leaf whose value is null, it doesn't
-        if(show_map.get(key) == null) {
-            return false;
-        } else if(show_map.get(key).getClass() != LinkedHashMap.class) {
+        // If we're at a leaf whose value is null, see if the null matches both the show and filter.
+        // This has to be in its own check because subsequent checks look at the class of the value
+        // which doesn't work for null
+        if(show_map.get(key) == null || filter_map.get(key) == null) {
+            return show_map.get(key) == filter_map.get(key);
+        }
+        if(show_map.get(key).getClass() != LinkedHashMap.class) {
+            // if the value for the key isn't a hashmap, then it's a leaf
             return show.get(key).equals(filter.get(key));
         } else {
+            // We aren't at a leaf, so call recursively
             return checkForMatch((JSONObject) show.get(key), (JSONObject) filter.get(key));
         }
     }
